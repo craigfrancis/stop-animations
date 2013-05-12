@@ -16,4 +16,5 @@ As Google Chrome cannot take a screen shot of the whole page, it creates a new o
 This can create a jumpy/flickering type experience which is not ideal:
 
 http://code.google.com/p/chromium/issues/detail?id=3690
+
 http://code.google.com/chrome/extensions/tabs.html#method-captureVisibleTab
