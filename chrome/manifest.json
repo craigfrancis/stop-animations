@@ -1,0 +1,19 @@
+{
+	"name": "Stop animations",
+	"version": "1.7",
+	"manifest_version": 2,
+	"description": "Stops all on screen animations (Gif/Flash/JavaScript) when you press the [esc] key... until you or click or press [esc] again.",
+	"icons": {
+			"16": "icon16.png",
+			"48": "icon48.png",
+			"128": "icon128.png"
+		},
+	"background": {
+			"scripts": ["background.js"]
+		},
+	"content_scripts": [ {
+			"js": [ "screenshot.js" ],
+			"matches": [ "http://*/*", "https://*/*" ]
+		 }],
+	"permissions": [ "tabs", "http://*/*", "https://*/*" ]
+}
