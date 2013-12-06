@@ -1,8 +1,9 @@
 {
-	"name": "Stop animations",
-	"version": "1.8",
+	"name": "Stop Animations",
+	"short_name": "Stop Anim",
+	"version": "1.9",
 	"manifest_version": 2,
-	"description": "Stops all on screen animations (Gif/Flash/JavaScript) when you press the [esc] key... until you or click or press [esc] again.",
+	"description": "Stops animations from distracting you while reading - just press the escape key [esc]... and press again to restore.",
 	"icons": {
 			"16": "icon16.png",
 			"48": "icon48.png",
