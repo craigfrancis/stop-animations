@@ -1,6 +1,6 @@
 {
 	"name": "Stop animations",
-	"version": "1.7",
+	"version": "1.8",
 	"manifest_version": 2,
 	"description": "Stops all on screen animations (Gif/Flash/JavaScript) when you press the [esc] key... until you or click or press [esc] again.",
 	"icons": {

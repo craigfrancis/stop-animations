@@ -60,13 +60,15 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 			window.addEventListener('scroll', updateScreenShot);
 			window.addEventListener('resize', updateScreenShot);
 
-			var windowWidth = (document.compatMode !== 'BackCompat' ? document.documentElement.clientWidth : document.body.clientWidth);
-			var windowHeight = (document.compatMode !== 'BackCompat' ? document.documentElement.clientHeight : document.body.clientHeight);
+			var windowZoomed = (window.outerWidth != window.innerWidth);
+			// var windowWidth = (document.compatMode !== 'BackCompat' ? document.documentElement.clientWidth : document.body.clientWidth);
+			// var windowHeight = (document.compatMode !== 'BackCompat' ? document.documentElement.clientHeight : document.body.clientHeight);
 
 			screenShotImg = document.createElement('img');
 			screenShotImg.src = request.screenShotUrl;
 			screenShotImg.style.display = 'block';
-			screenShotImg.style.maxWidth = 'none';
+			screenShotImg.style.maxWidth = 'none'; // Don't inherit from site css
+			screenShotImg.width = window.innerWidth; // Width with scroll bars, important when zoomed
 			screenShotImg.onclick = removeScreenShot;
 
 			screenShotDiv = document.createElement('div');
@@ -75,8 +77,8 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 			screenShotDiv.style.cursor = 'pointer';
 			screenShotDiv.style.top = document.body.scrollTop + 'px';
 			screenShotDiv.style.left = document.body.scrollLeft + 'px';
-			screenShotDiv.style.width = windowWidth + 'px'; // Hide the scroll bar in screen-shot
-			screenShotDiv.style.height = windowHeight + 'px';
+			screenShotDiv.style.width = (document.body.scrollWidth - (windowZoomed ? 1 : 0)) + 'px'; // Hide the scroll bar in screen-shot, and allow for rounding issues when zoomed
+			screenShotDiv.style.height = (document.body.scrollHeight - (windowZoomed ? 1 : 0)) + 'px';
 			screenShotDiv.style.zIndex = 2147483647; // Always on top
 			screenShotDiv.style.overflow = 'hidden';
 
