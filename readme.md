@@ -1,9 +1,13 @@
 
 # Stop Animation
 
-Stops all on screen animations (Gif/Flash/JavaScript) when you press the [esc] key... until you or click or press [esc] again.
+Chrome extension to stop animations from distracting you while reading.
 
-Works by taking a screen shot and layering it over the webpage, and will re-update when you scroll or resize the window (ideally future versions of Chrome will allow a full page screen shot, not just the visible part).
+Just press the escape key [esc]... and press again to restore.
+
+This stops everything from GIF, Flash, and even JavaScript.
+
+Works by taking a screen shot and layering it over the page... unfortunately it can't do a full screen shot (see bug report 45209), so it re-updates when you scroll or resize the window.
 
 https://chrome.google.com/webstore/detail/stop-animations/gemmknjnneiojfjelmgappppbaneikda
 
