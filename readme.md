@@ -19,12 +19,19 @@ As Google Chrome cannot take a screen shot of the whole page, it creates a new o
 
 This can create a jumpy/flickering type experience which is not ideal:
 
-https://code.google.com/p/chromium/issues/detail?id=45209
+Feature request:
+	https://code.google.com/p/chromium/issues/detail?id=469663
 
-http://code.google.com/chrome/extensions/tabs.html#method-captureVisibleTab
+Was:
+	https://code.google.com/p/chromium/issues/detail?id=45209
+
+Deocumentation:
+	http://code.google.com/chrome/extensions/tabs.html#method-captureVisibleTab
 
 ---
 
-## Alternative
+## Alternatives
 
-http://code.google.com/p/chromium/issues/detail?id=3690
+It looks like there might be the ability to pause animated images (not JS, CSS, etc):
+
+	http://code.google.com/p/chromium/issues/detail?id=3690

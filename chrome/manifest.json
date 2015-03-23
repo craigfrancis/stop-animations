@@ -16,5 +16,5 @@
 			"js": [ "screenshot.js" ],
 			"matches": [ "http://*/*", "https://*/*" ]
 		 }],
-	"permissions": [ "tabs", "http://*/*", "https://*/*" ]
+	"permissions": [ "tabs", "http://*/*", "https://*/*", "<all_urls>" ]
 }
