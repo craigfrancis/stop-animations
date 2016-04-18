@@ -61,8 +61,17 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 			window.addEventListener('resize', updateScreenShot);
 
 			var windowZoomed = (window.outerWidth != window.innerWidth);
+
+			// Compatibility mode keeps changing.
 			// var windowWidth = (document.compatMode !== 'BackCompat' ? document.documentElement.clientWidth : document.body.clientWidth);
 			// var windowHeight = (document.compatMode !== 'BackCompat' ? document.documentElement.clientHeight : document.body.clientHeight);
+
+			// Returns the full height of the page, causing the scroll bars to change (mostly the vertical scroll bar).
+			// var windowWidth = (document.body.scrollWidth - (windowZoomed ? 1 : 0)); // Hide the scroll bar in screen-shot, and allow for rounding issues when zoomed
+			// var windowHeight = (document.body.scrollHeight - (windowZoomed ? 1 : 0));
+
+			var windowWidth = (document.documentElement.clientWidth - (windowZoomed ? 1 : 0)); // Hide the scroll bar in screen-shot, and allow for rounding issues when zoomed
+			var windowHeight = (document.documentElement.clientHeight - (windowZoomed ? 1 : 0));
 
 			screenShotImg = document.createElement('img');
 			screenShotImg.src = request.screenShotUrl;
@@ -77,8 +86,8 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 			screenShotDiv.style.cursor = 'pointer';
 			screenShotDiv.style.top = document.body.scrollTop + 'px';
 			screenShotDiv.style.left = document.body.scrollLeft + 'px';
-			screenShotDiv.style.width = (document.body.scrollWidth - (windowZoomed ? 1 : 0)) + 'px'; // Hide the scroll bar in screen-shot, and allow for rounding issues when zoomed
-			screenShotDiv.style.height = (document.body.scrollHeight - (windowZoomed ? 1 : 0)) + 'px';
+			screenShotDiv.style.width = windowWidth + 'px';
+			screenShotDiv.style.height = windowHeight + 'px';
 			screenShotDiv.style.zIndex = 2147483647; // Always on top
 			screenShotDiv.style.overflow = 'hidden';
 
