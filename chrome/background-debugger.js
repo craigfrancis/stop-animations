@@ -118,7 +118,8 @@ function getScreenshot(request, sender) {
 			console.log(result);
 			console.log(chrome.runtime.lastError);
 
-			//chrome.debugger.detach({tabId: sender.tab.id});
+			// chrome.debugger.detach({tabId: sender.tab.id});
+			// debugging = false;
 
 			if (result.data) {
 
