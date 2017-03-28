@@ -86,7 +86,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 			screenShotDiv.style.cursor = 'pointer';
 			screenShotDiv.style.top = document.body.scrollTop + 'px';
 			screenShotDiv.style.left = document.body.scrollLeft + 'px';
-			screenShotDiv.style.width = windowWidth + 'px';
+			screenShotDiv.style.width = windowWidth + 'px'; // Matt Saul is using `windowWidth + 17`, which might be a Windows Scroll bar issue? (https://github.com/intercision/stop-animations)
 			screenShotDiv.style.height = windowHeight + 'px';
 			screenShotDiv.style.zIndex = 2147483647; // Always on top
 			screenShotDiv.style.overflow = 'hidden';
