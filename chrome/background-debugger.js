@@ -9,6 +9,10 @@
 	// 2) Rename this file to background.js
 	//
 	//--------------------------------------------------
+	//
+	// https://cs.chromium.org/chromium/src/third_party/WebKit/Source/devtools/front_end/emulation/DeviceModeModel.js?l=636
+	//
+	//--------------------------------------------------
 
 var debugging = false;
 
