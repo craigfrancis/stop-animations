@@ -1,7 +1,7 @@
 {
 	"name": "Stop Animations",
 	"short_name": "Stop Anim",
-	"version": "1.11",
+	"version": "1.12",
 	"manifest_version": 2,
 	"description": "Stops animations from distracting you while reading - just press the escape key [esc]... and press again to restore.",
 	"icons": {
