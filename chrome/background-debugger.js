@@ -14,125 +14,131 @@
 	//
 	//--------------------------------------------------
 
-var debugging = false;
+;(function(document, window, undefined) {
 
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+	'use strict';
 
-		if (request.action === 'screenShotRequest') {
+	var debugging = false;
 
-			if (debugging) {
+	chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 
-				forceViewport(request, sender);
+			if (request.action === 'screenShotRequest') {
 
-			} else {
+				if (debugging) {
 
-				chrome.debugger.attach({tabId: sender.tab.id}, '1.0', function() {
+					forceViewport(request, sender);
 
-						debugging = true;
+				} else {
 
-						chrome.debugger.onEvent.addListener(function(source, method, params) {
-								console.log(source);
-								console.log(method);
-								console.log(params);
-							});
+					chrome.debugger.attach({tabId: sender.tab.id}, '1.0', function() {
 
-						forceViewport(request, sender);
+							debugging = true;
 
-					});
+							chrome.debugger.onEvent.addListener(function(source, method, params) {
+									console.log(source);
+									console.log(method);
+									console.log(params);
+								});
 
-			}
+							forceViewport(request, sender);
 
-		}
+						});
 
-		sendResponse(null);
-
-	});
-
-
-function forceViewport(request, sender) {
-
-	chrome.debugger.sendCommand({tabId: sender.tab.id}, 'Emulation.forceViewport', {
-			'x': 0,
-			'y': 0,
-			'scale': 1
-		}, function(result) {
-
-			console.log(result);
-			console.log(chrome.runtime.lastError);
-
-			setTimeout(function() {
-				setDeviceMetricsOverride(request, sender);
-			}, 1000);
-
-		});
-
-}
-
-function setDeviceMetricsOverride(request, sender) {
-
-	chrome.debugger.sendCommand({tabId: sender.tab.id}, 'Emulation.setDeviceMetricsOverride', {
-			'width': 0,
-			'height': 0,
-			'deviceScaleFactor': 1,
-			'mobile': false,
-			'fitWindow': false,
-			'scale': 1
-		}, function(result) {
-
-			console.log(result);
-			console.log(chrome.runtime.lastError);
-
-			setTimeout(function() {
-				setVisibleSize(request, sender);
-			}, 1000);
-
-		});
-
-}
-
-function setVisibleSize(request, sender) {
-
-	chrome.debugger.sendCommand({tabId: sender.tab.id}, 'Emulation.setVisibleSize', {
-			'width': 500,
-			'height': 2000
-		}, function(result) {
-
-			console.log(result);
-			console.log(chrome.runtime.lastError);
-
-			setTimeout(function() {
-				getScreenshot(request, sender);
-			}, 1000);
-
-		});
-
-}
-
-function getScreenshot(request, sender) {
-
-	chrome.debugger.sendCommand({tabId: sender.tab.id}, 'Page.captureScreenshot', {
-			'format': 'png',
-			'fromSurface': false
-		}, function(result) {
-
-			console.log(result);
-			console.log(chrome.runtime.lastError);
-
-			// chrome.debugger.detach({tabId: sender.tab.id});
-			// debugging = false;
-
-			if (result.data) {
-
-				chrome.tabs.sendRequest(sender.tab.id, {
-						'action': 'screenShotResponse',
-						'screenShotId': request.screenShotId,
-						'screenShotUrl': 'data:image/png;base64,' + result.data
-					});
-
-				console.log('done');
+				}
 
 			}
 
+			sendResponse(null);
+
 		});
 
-}
+
+	function forceViewport(request, sender) {
+
+		chrome.debugger.sendCommand({tabId: sender.tab.id}, 'Emulation.forceViewport', {
+				'x': 0,
+				'y': 0,
+				'scale': 1
+			}, function(result) {
+
+				console.log(result);
+				console.log(chrome.runtime.lastError);
+
+				setTimeout(function() {
+					setDeviceMetricsOverride(request, sender);
+				}, 1000);
+
+			});
+
+	}
+
+	function setDeviceMetricsOverride(request, sender) {
+
+		chrome.debugger.sendCommand({tabId: sender.tab.id}, 'Emulation.setDeviceMetricsOverride', {
+				'width': 0,
+				'height': 0,
+				'deviceScaleFactor': 1,
+				'mobile': false,
+				'fitWindow': false,
+				'scale': 1
+			}, function(result) {
+
+				console.log(result);
+				console.log(chrome.runtime.lastError);
+
+				setTimeout(function() {
+					setVisibleSize(request, sender);
+				}, 1000);
+
+			});
+
+	}
+
+	function setVisibleSize(request, sender) {
+
+		chrome.debugger.sendCommand({tabId: sender.tab.id}, 'Emulation.setVisibleSize', {
+				'width': 500,
+				'height': 2000
+			}, function(result) {
+
+				console.log(result);
+				console.log(chrome.runtime.lastError);
+
+				setTimeout(function() {
+					getScreenshot(request, sender);
+				}, 1000);
+
+			});
+
+	}
+
+	function getScreenshot(request, sender) {
+
+		chrome.debugger.sendCommand({tabId: sender.tab.id}, 'Page.captureScreenshot', {
+				'format': 'png',
+				'fromSurface': false
+			}, function(result) {
+
+				console.log(result);
+				console.log(chrome.runtime.lastError);
+
+				// chrome.debugger.detach({tabId: sender.tab.id});
+				// debugging = false;
+
+				if (result.data) {
+
+					chrome.tabs.sendRequest(sender.tab.id, {
+							'action': 'screenShotResponse',
+							'screenShotId': request.screenShotId,
+							'screenShotUrl': 'data:image/png;base64,' + result.data
+						});
+
+					console.log('done');
+
+				}
+
+			});
+
+	}
+
+})(document, window);
