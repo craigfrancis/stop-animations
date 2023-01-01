@@ -22,7 +22,7 @@
 
 	chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 
-			if (request.action === 'screenShotRequest') {
+			if (request.action === 'screenshot_request') {
 
 				if (debugging) {
 
@@ -128,9 +128,9 @@
 				if (result.data) {
 
 					chrome.tabs.sendRequest(sender.tab.id, {
-							'action': 'screenShotResponse',
-							'screenShotId': request.screenShotId,
-							'screenShotUrl': 'data:image/png;base64,' + result.data
+							'action': 'screenshot_response',
+							'screenshot_id': request.screenshot_id,
+							'screenshot_url': 'data:image/png;base64,' + result.data
 						});
 
 					console.log('done');

@@ -3,20 +3,20 @@
 
 	'use strict';
 
-	var screenShotId = 0,
-		screenShotDiv = null,
-		screenShotImg = null,
-		screenShotTimeout = null;
+	var screenshot_id = 0,
+		screenshot_div = null,
+		screenshot_img = null,
+		screenshot_timeout = null;
 
 	function removeScreenShot() {
-		if (screenShotDiv !== null) {
+		if (screenshot_div !== null) {
 
 			// console.log('remove');
 
-			screenShotDiv.parentNode.removeChild(screenShotDiv);
+			screenshot_div.parentNode.removeChild(screenshot_div);
 
-			screenShotDiv = null;
-			screenShotImg = null;
+			screenshot_div = null;
+			screenshot_img = null;
 
 			window.removeEventListener('scroll', updateScreenShot);
 			window.removeEventListener('resize', updateScreenShot);
@@ -28,35 +28,35 @@
 
 		// console.log('update');
 
-		screenShotDiv.style.display = 'none'; // Can't remove as this will loose the on-scroll event handler
+		screenshot_div.style.display = 'none'; // Can't remove as this will loose the on-scroll event handler
 
-		screenShotId++;
+		screenshot_id++;
 
-		if (screenShotTimeout) {
-			clearTimeout(screenShotTimeout);
+		if (screenshot_timeout) {
+			clearTimeout(screenshot_timeout);
 		}
-		screenShotTimeout = setTimeout(takeScreenShot, (0.07*1000)); // slight delay
+		screenshot_timeout = setTimeout(takeScreenShot, (0.07*1000)); // slight delay
 
 	}
 
 	function takeScreenShot() {
 
 		chrome.extension.sendRequest({
-				'action': 'screenShotRequest',
-				'screenShotId': screenShotId
+				'action': 'screenshot_request',
+				'screenshot_id': screenshot_id
 			});
 
 	}
 
 	chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 
-			if (request.action === 'screenShotResponse' && typeof request.screenShotUrl !== 'undefined' && request.screenShotUrl != 'undefined') {
+			if (request.action === 'screenshot_response' && typeof request.screenshot_url !== 'undefined' && request.screenshot_url != 'undefined') {
 
 				//--------------------------------------------------
 				// Only show the latest
 
-					if (request.screenShotId != screenShotId) {
-						// console.log('Skipped (' + request.screenShotId + ' != ' + screenShotId + ')');
+					if (request.screenshot_id != screenshot_id) {
+						// console.log('Skipped (' + request.screenshot_id + ' != ' + screenshot_id + ')');
 						return false;
 					}
 
@@ -96,42 +96,42 @@
 				//--------------------------------------------------
 				// Image
 
-					screenShotImg = document.createElement('img');
-					screenShotImg.src = request.screenShotUrl;
-					screenShotImg.style.display = 'block';
-					screenShotImg.style.maxWidth = 'none'; // Don't inherit from site css
-					screenShotImg.width = window.innerWidth; // Width with scroll bars, can be wider than the <div> (important when zoomed)
-					screenShotImg.onclick = removeScreenShot;
+					screenshot_img = document.createElement('img');
+					screenshot_img.src = request.screenshot_url;
+					screenshot_img.style.display = 'block';
+					screenshot_img.style.maxWidth = 'none'; // Don't inherit from site css
+					screenshot_img.width = window.innerWidth; // Width with scroll bars, can be wider than the <div> (important when zoomed)
+					screenshot_img.onclick = removeScreenShot;
 
 				//--------------------------------------------------
 				// Wrapper div
 
-					screenShotDiv = document.createElement('div');
-					screenShotDiv.appendChild(screenShotImg);
-					screenShotDiv.style.position = 'absolute';
-					screenShotDiv.style.cursor = 'pointer';
-					screenShotDiv.style.top = window.scrollY + 'px'; // Was document.body.scrollTop (http://lists.w3.org/Archives/Public/www-style/2013Oct/0287.html)
-					screenShotDiv.style.left = window.scrollX + 'px';
-					screenShotDiv.style.width = windowWidth + 'px'; // Matt Saul is using `windowWidth + 17`, which might be a Windows Scroll bar issue? (https://github.com/intercision/stop-animations)
-					screenShotDiv.style.height = windowHeight + 'px';
-					screenShotDiv.style.zIndex = 2147483647; // Always on top
-					screenShotDiv.style.overflow = 'hidden';
+					screenshot_div = document.createElement('div');
+					screenshot_div.appendChild(screenshot_img);
+					screenshot_div.style.position = 'absolute';
+					screenshot_div.style.cursor = 'pointer';
+					screenshot_div.style.top = window.scrollY + 'px'; // Was document.body.scrollTop (http://lists.w3.org/Archives/Public/www-style/2013Oct/0287.html)
+					screenshot_div.style.left = window.scrollX + 'px';
+					screenshot_div.style.width = windowWidth + 'px'; // Matt Saul is using `windowWidth + 17`, which might be a Windows Scroll bar issue? (https://github.com/intercision/stop-animations)
+					screenshot_div.style.height = windowHeight + 'px';
+					screenshot_div.style.zIndex = 2147483647; // Always on top
+					screenshot_div.style.overflow = 'hidden';
 
 				//--------------------------------------------------
 				// Add to page
 
 					var bodyRef = document.getElementsByTagName('body');
 					if (bodyRef[0]) {
-						bodyRef[0].appendChild(screenShotDiv);
+						bodyRef[0].appendChild(screenshot_div);
 					}
 
 			}
 
 		});
 
-	function screenShotKeyPress(e) {
+	function screenshot_key_press(e) {
 		if (e.keyCode === 27 && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) {
-			if (screenShotDiv !== null) {
+			if (screenshot_div !== null) {
 				removeScreenShot();
 			} else {
 				takeScreenShot();
@@ -139,6 +139,6 @@
 		}
 	}
 
-	document.addEventListener('keydown', screenShotKeyPress, true);
+	document.addEventListener('keydown', screenshot_key_press, true);
 
 })(document, window);
