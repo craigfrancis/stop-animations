@@ -1,24 +1,70 @@
 
 // Icon from: http://www.iconspedia.com/icon/stop-8104.html
 
-;(function(document, window, undefined) {
+;(function(undefined) {
 
 	'use strict';
 
-	chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+	function screenshot_send(tab_id, screenshot_id) {
 
-			if (request.action === 'screenShotRequest') {
-				chrome.tabs.captureVisibleTab(null, {'format': 'png'}, function(screenShotUrl) {
-					chrome.tabs.sendRequest(sender.tab.id, {
-							'action': 'screenShotResponse',
-							'screenShotId': request.screenShotId,
-							'screenShotUrl': screenShotUrl
-						});
-				});
-			}
+		chrome.tabs.captureVisibleTab(null, {'format': 'png'}, function(screenshot_url) {
 
-			sendResponse(null);
+				chrome.tabs.sendMessage(tab_id, {
+						'action': 'screenshot_response',
+						'screenshot_id': screenshot_id,
+						'screenshot_url': screenshot_url
+					});
 
-		});
+			});
 
-})(document, window);
+	}
+
+	function shortcut_check(tab_id) {
+
+		if (typeof chrome.commands.getAll !== 'function') {
+			return; // https://developer.chrome.com/docs/extensions/reference/commands/#method-getAll "Pending", "This is coming soon and not yet in a stable release of Chrome"?
+		}
+
+		chrome.commands.getAll(function(commands) {
+
+				for (var k = (commands.length - 1); k >= 0; k--) {
+					if (commands[k]['name'] == 'stop-animations' && commands[k]['shortcut'] !== '') {
+
+						chrome.tabs.sendMessage(tab_id, {
+								'action': 'screenshot_shortcut_set',
+							});
+
+					}
+				}
+
+			});
+
+	}
+
+	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+
+		if (sender.id != chrome.runtime.id) {
+			return;
+		}
+
+		if (message.action === 'screenshot_request') {
+
+			screenshot_send(sender.tab.id, message.screenshot_id);
+
+		} else if (message.action === 'screenshot_shortcut_check') {
+
+			shortcut_check(sender.tab.id);
+
+		}
+
+	});
+
+	chrome.commands.onCommand.addListener(function(command, tab) {
+
+		if (command == 'stop-animations') {
+			screenshot_send(tab.id, -1);
+		}
+
+	});
+
+})();
