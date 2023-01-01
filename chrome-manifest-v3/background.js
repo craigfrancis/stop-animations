@@ -1,24 +1,36 @@
 
 // Icon from: http://www.iconspedia.com/icon/stop-8104.html
 
-;(function(document, window, undefined) {
+;(function(undefined) {
 
 	'use strict';
 
-	chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+	function send_screenshot(tab_id, screenshot_id) {
 
-			if (request.action === 'screenshot_request') {
-				chrome.tabs.captureVisibleTab(null, {'format': 'png'}, function(screenshot_url) {
-					chrome.tabs.sendRequest(sender.tab.id, {
-							'action': 'screenshot_response',
-							'screenshot_id': request.screenshot_id,
-							'screenshot_url': screenshot_url
-						});
-				});
-			}
+		chrome.tabs.captureVisibleTab(null, {'format': 'png'}, function(screenshot_url) {
 
-			sendResponse(null);
+				chrome.tabs.sendMessage(tab_id, {
+						'action': 'screenshot_response',
+						'screenshot_id': screenshot_id,
+						'screenshot_url': screenshot_url
+					});
 
-		});
+			});
 
-})(document, window);
+	}
+
+	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+
+		if (sender.id != chrome.runtime.id) {
+			return;
+		}
+
+		if (message.action === 'screenshot_request') {
+
+			send_screenshot(sender.tab.id, message.screenshot_id);
+
+		}
+
+	});
+
+})();

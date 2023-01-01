@@ -14,13 +14,13 @@
 	//
 	//--------------------------------------------------
 
-;(function(document, window, undefined) {
+;(function(undefined) {
 
 	'use strict';
 
 	var debugging = false;
 
-	chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 			if (request.action === 'screenshot_request') {
 
@@ -127,7 +127,7 @@
 
 				if (result.data) {
 
-					chrome.tabs.sendRequest(sender.tab.id, {
+					chrome.tabs.sendMessage(sender.tab.id, {
 							'action': 'screenshot_response',
 							'screenshot_id': request.screenshot_id,
 							'screenshot_url': 'data:image/png;base64,' + result.data
@@ -141,4 +141,4 @@
 
 	}
 
-})(document, window);
+})();

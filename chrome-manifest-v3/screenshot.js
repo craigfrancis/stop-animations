@@ -35,28 +35,32 @@
 		if (screenshot_timeout) {
 			clearTimeout(screenshot_timeout);
 		}
-		screenshot_timeout = setTimeout(take_screenshot, (0.07*1000)); // slight delay
+		screenshot_timeout = setTimeout(take_screenshot, (0.05*1000)); // slight delay (time in milliseconds, 1000 ms = 1 second)
 
 	}
 
 	function take_screenshot() {
 
-		chrome.extension.sendRequest({
+		chrome.runtime.sendMessage({
 				'action': 'screenshot_request',
 				'screenshot_id': screenshot_id
 			});
 
 	}
 
-	chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
-			if (request.action === 'screenshot_response' && typeof request.screenshot_url !== 'undefined' && request.screenshot_url != 'undefined') {
+			if (sender.id != chrome.runtime.id) {
+				return;
+			}
+
+			if (message.action === 'screenshot_response' && typeof message.screenshot_url !== 'undefined' && message.screenshot_url != 'undefined') {
 
 				//--------------------------------------------------
 				// Only show the latest
 
-					if (request.screenshot_id != screenshot_id) {
-						// console.log('Skipped (' + request.screenshot_id + ' != ' + screenshot_id + ')');
+					if (message.screenshot_id != screenshot_id) {
+						// console.log('Skipped (' + message.screenshot_id + ' != ' + screenshot_id + ')');
 						return false;
 					}
 
@@ -97,7 +101,7 @@
 				// Image
 
 					screenshot_img = document.createElement('img');
-					screenshot_img.src = request.screenshot_url;
+					screenshot_img.src = message.screenshot_url;
 					screenshot_img.style.display = 'block';
 					screenshot_img.style.maxWidth = 'none'; // Don't inherit from site css
 					screenshot_img.width = window.innerWidth; // Width with scroll bars, can be wider than the <div> (important when zoomed)
