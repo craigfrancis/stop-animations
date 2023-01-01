@@ -5,7 +5,7 @@
 
 	'use strict';
 
-	function send_screenshot(tab_id, screenshot_id) {
+	function screenshot_send(tab_id, screenshot_id) {
 
 		chrome.tabs.captureVisibleTab(null, {'format': 'png'}, function(screenshot_url) {
 
@@ -27,7 +27,7 @@
 
 		if (message.action === 'screenshot_request') {
 
-			send_screenshot(sender.tab.id, message.screenshot_id);
+			screenshot_send(sender.tab.id, message.screenshot_id);
 
 		}
 
