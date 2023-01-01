@@ -59,6 +59,11 @@
 				//--------------------------------------------------
 				// Only show the latest
 
+					if (message.screenshot_id == -1) {
+						screenshot_id++;
+						message.screenshot_id = screenshot_id;
+					}
+
 					if (message.screenshot_id != screenshot_id) {
 						// console.log('Skipped (' + message.screenshot_id + ' != ' + screenshot_id + ')');
 						return false;
@@ -129,6 +134,10 @@
 						bodyRef[0].appendChild(screenshot_div);
 					}
 
+			} else if (message.action === 'screenshot_shortcut_set') {
+
+				document.removeEventListener('keydown', screenshot_key_press, true);
+
 			}
 
 		});
@@ -144,5 +153,9 @@
 	}
 
 	document.addEventListener('keydown', screenshot_key_press, true);
+
+	chrome.runtime.sendMessage({
+			'action': 'screenshot_shortcut_check', // Add [esc] keydown event first, remove for those who have set a custom shortcut (takes ~40ms to check on a fast desktop).
+		});
 
 })(document, window);
