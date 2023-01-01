@@ -8,7 +8,7 @@
 		screenshot_img = null,
 		screenshot_timeout = null;
 
-	function removeScreenShot() {
+	function remove_screenshot() {
 		if (screenshot_div !== null) {
 
 			// console.log('remove');
@@ -18,13 +18,13 @@
 			screenshot_div = null;
 			screenshot_img = null;
 
-			window.removeEventListener('scroll', updateScreenShot);
-			window.removeEventListener('resize', updateScreenShot);
+			window.removeEventListener('scroll', update_screenshot);
+			window.removeEventListener('resize', update_screenshot);
 
 		}
 	}
 
-	function updateScreenShot() {
+	function update_screenshot() {
 
 		// console.log('update');
 
@@ -35,11 +35,11 @@
 		if (screenshot_timeout) {
 			clearTimeout(screenshot_timeout);
 		}
-		screenshot_timeout = setTimeout(takeScreenShot, (0.07*1000)); // slight delay
+		screenshot_timeout = setTimeout(take_screenshot, (0.07*1000)); // slight delay
 
 	}
 
-	function takeScreenShot() {
+	function take_screenshot() {
 
 		chrome.extension.sendRequest({
 				'action': 'screenshot_request',
@@ -63,13 +63,13 @@
 				//--------------------------------------------------
 				// Cleanup
 
-					removeScreenShot();
+					remove_screenshot();
 
 				//--------------------------------------------------
 				// Events needing a new screenshot
 
-					window.addEventListener('scroll', updateScreenShot);
-					window.addEventListener('resize', updateScreenShot);
+					window.addEventListener('scroll', update_screenshot);
+					window.addEventListener('resize', update_screenshot);
 
 				//--------------------------------------------------
 				// Window size:
@@ -101,7 +101,7 @@
 					screenshot_img.style.display = 'block';
 					screenshot_img.style.maxWidth = 'none'; // Don't inherit from site css
 					screenshot_img.width = window.innerWidth; // Width with scroll bars, can be wider than the <div> (important when zoomed)
-					screenshot_img.onclick = removeScreenShot;
+					screenshot_img.onclick = remove_screenshot;
 
 				//--------------------------------------------------
 				// Wrapper div
@@ -132,9 +132,9 @@
 	function screenshot_key_press(e) {
 		if (e.keyCode === 27 && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) {
 			if (screenshot_div !== null) {
-				removeScreenShot();
+				remove_screenshot();
 			} else {
-				takeScreenShot();
+				take_screenshot();
 			}
 		}
 	}
