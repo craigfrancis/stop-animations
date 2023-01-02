@@ -9,7 +9,6 @@
 			"48": "icon48.png",
 			"128": "icon128.png"
 		},
-	"permissions": [ "tabs" ],
 	"host_permissions": [ "<all_urls>" ],
 	"background": {
 			"service_worker": "background.js"
