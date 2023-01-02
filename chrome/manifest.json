@@ -1,7 +1,7 @@
 {
 	"name": "Stop Animations",
 	"short_name": "Stop Anim",
-	"version": "2.00",
+	"version": "2.0.0",
 	"manifest_version": 3,
 	"description": "Stops distracting animations.",
 	"icons": {
