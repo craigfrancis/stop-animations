@@ -154,6 +154,12 @@
 
 	document.addEventListener('keydown', screenshot_key_press, true);
 
+	// (async () => {
+	// 	var response = await chrome.runtime.sendMessage({
+	// 			'action': 'screenshot_shortcut_check',
+	// 		});
+	// })();
+
 	chrome.runtime.sendMessage({
 			'action': 'screenshot_shortcut_check', // Add [esc] keydown event first, remove for those who have set a custom shortcut (takes ~40ms to check on a fast desktop).
 		});

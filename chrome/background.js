@@ -53,6 +53,11 @@
 
 		} else if (message.action === 'screenshot_shortcut_check') {
 
+			// This returns all shortcuts, rather than only calling sendMessage() when 'stop-animations' has been set.
+			// https://stackoverflow.com/q/74951233
+			// chrome.commands.getAll().then(sendResponse);
+			// return true;
+
 			shortcut_check(sender.tab.id);
 
 		}
